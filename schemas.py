@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from enum import Enum
 
 class TaskEnum(str, Enum):
@@ -17,7 +17,7 @@ class TaskResponse(BaseModel):
 
 class TaskCreate(BaseModel):
     tags: list[str] = []
-    title: str
+    title: str = Field(min_length=1)
 
 class TaskUpdate(BaseModel):
     tags: list[str] = []
