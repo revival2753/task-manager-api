@@ -1,10 +1,20 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from uuid import uuid4
 from schemas import TaskCreate, TaskUpdate, TaskResponse, TaskEnum
+from routers.dependencies import verify_api_key
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
 
 tasks: list[TaskResponse] = []
+
+
+@router.delete("/{task_id}", dependencies=[Depends(verify_api_key)])
+def delete_task(task_id: str):
+    task = next((t for t in tasks if t.id == task_id), None)
+    if task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    tasks.remove(task)
+    return {"detail": "Task deleted"}
 
 @router.get("", response_model=list[TaskResponse])
 def get_tasks(status: TaskEnum | None = None):
