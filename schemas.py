@@ -8,6 +8,7 @@ class TaskEnum(str, Enum):
 
 class TaskResponse(BaseModel):
     id: str
+    tags: list[str] = []
     title: str
     status: TaskEnum
 
@@ -15,8 +16,10 @@ class TaskResponse(BaseModel):
         from_attributes = True
 
 class TaskCreate(BaseModel):
+    tags: list[str] = []
     title: str
 
 class TaskUpdate(BaseModel):
+    tags: list[str] = []
     title: str | None = None
     status: TaskEnum | None = None
